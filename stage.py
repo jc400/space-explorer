@@ -46,7 +46,7 @@ class Stage:
         self.farm_images = {}
         
         # load background and stage element images
-        PATH = os.path.join('images', 'stage', 'square')
+        PATH = os.path.join('images', 'stage', 'space1')
         for filename in ['bg1.png', 'fg1.png', 'fg2.png', 
                          'fg3.png', 'fg4.png', 'fg5.png']:
             temp = get_img(filename)

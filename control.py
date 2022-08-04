@@ -50,7 +50,7 @@ class Control:
         
         self.print_scr()
     
-    def load_images(self, pth='square'):
+    def load_images(self, pth='spaceman'):
         """Load images. pth allows different characters to be loaded."""
         PATH = os.path.join('images', 'char', pth)
         self.images = {'left':{}, 'right':{}}
