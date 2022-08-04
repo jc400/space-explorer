@@ -1,13 +1,16 @@
 #items module
 
 """
--start adding items. Coins/currency. Powerups (and associated mechanics)
--Mines. Proximity mines. Seeker missiles. Make standard explosion function/class, can use in 
-children. Aesthetic like smart bomb in smash, colored circle killbox.
+Note RE seeker: current seeker implementation requires PIL library, because it is rotating the 
+seeker image (and we can't do that with just tkinter). I want to remove the PIL dependency for ease 
+of setup, so I will be removing the seeker from the regular game. But I'm leaving the seeker code
+here, and maybe we can check for PIL and use it optionally. Will decide later.
 
--sort frame_loop() to have stage_move(), control_move(), and then item_move(). Item_move()
-would handle blinking/animations fro items, and logic (for something like seeker missile).
-Maybe also handles collision logic.
+Seeker needs: 
+-images loaded here --> load_seeker_images() called when init() item factory
+-seeker spawned --> stage.stairstep() -> stage.item_chooser() -> stage.spawn_items()
+                -> spawn_seeker()
+-seeker update: -> item.move -> seeker.move()
 
 
 current image tag structure:
@@ -22,17 +25,15 @@ New structure:
 -then drift, if relevant. USE 12 FOR STATIONARY
 -then the frame, used for animations. 
 
-
-
-
-
 """
 
-
-from PIL import Image, ImageTk
+import tkinter
 import os
 import random
 import math
+
+#from PIL import Image, ImageTk  # Required to rotate seeker image
+SEEKER_ACTIVE = False
 
 
 class Item_factory:
@@ -50,27 +51,32 @@ class Item_factory:
         
 
     def load_images(self):
-        PATH = os.path.join('images', 'item')
-          
+        
+        def get_img(filename):
+            """Uses tkinter.photoImage to create & return an image"""
+            return tkinter.PhotoImage(file=os.path.join(PATH, filename))
+            
+        # define dict to hold item images
         self.images = {'seeker':{}, 'landmine':{}}
         
-        try:
-            self.images['mine'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'mine.png')))
-            
-            self.images['seeker']['raw'] = Image.open(os.path.join(PATH, 'seeker', 'mini.png'))
-            self.images['seeker']['temp'] = ImageTk.PhotoImage(self.images['seeker']['raw'])
-            
-            self.images['landmine']['dormant']=ImageTk.PhotoImage(Image.open(os.path.join(PATH,'landmine','dormant.png')))
-            self.images['landmine']['blank']=ImageTk.PhotoImage(Image.open(os.path.join(PATH,'landmine','blank.png')))
-            self.images['landmine']['three']=ImageTk.PhotoImage(Image.open(os.path.join(PATH,'landmine','three.png')))
-            self.images['landmine']['two']=ImageTk.PhotoImage(Image.open(os.path.join(PATH,'landmine','two.png')))
-            self.images['landmine']['one']=ImageTk.PhotoImage(Image.open(os.path.join(PATH,'landmine','one.png')))
-            
+        # load regular mine image
+        PATH = os.path.join('images', 'item')
+        self.images['mine'] = get_img('mine.png')
+        
+        # landmine images
+        PATH = os.path.join('images', 'item', 'landmine')
+        self.images['landmine']['dormant'] = get_img('dormant.png')
+        self.images['landmine']['blank'] = get_img('blank.png')
+        self.images['landmine']['three'] = get_img('three.png')
+        self.images['landmine']['two'] = get_img('two.png')
+        self.images['landmine']['one'] = get_img('one.png')
 
-        except IOError:
-            print('issue loading item images')
-            
-    
+    def load_seeker_images(self):
+        from PIL import Image, ImageTk
+        PATH = os.path.join('images', 'item')
+        self.images['seeker']['raw'] = Image.open(os.path.join(PATH, 'seeker', 'mini.png'))
+        self.images['seeker']['temp'] = ImageTk.PhotoImage(self.images['seeker']['raw'])
+        
     
     
 #---------------INSIDE FRAMELOOP--------------# 
@@ -309,8 +315,10 @@ class Item_factory:
                 count -= 1
                 
     
-
     def spawn_seeker(self, side):
+        if not SEEKER_ACTIVE:
+            return
+        
         seeker_y = random.randint(100, self.PARENT.WINDOW_HEIGHT-100)
         if side == 'left':
             seeker_x = self.PARENT.control.position[0] - 1000
