@@ -50,10 +50,6 @@ class Game:
     
     def __init__(self, parent):
         
-        #create local game constants and vars
-        self.FULL_PATH = data.filenames.FULL_PATH
-        self.HS_FILENAME = data.filenames.HS_FILENAME
-        
         self.WINDOW_WIDTH = conf.WINDOW_WIDTH
         self.WINDOW_HEIGHT = conf.WINDOW_HEIGHT
         self.FRAMERATE = conf.FRAMERATE
@@ -153,7 +149,7 @@ class Game:
       
     def load_high_score(self):
         try:
-            in_file = open(os.path.join("data", self.HS_FILENAME), 'rb')
+            in_file = open(os.path.join("data", "highscores.txt"), 'rb')
             self.high_score = pickle.load(in_file)
             in_file.close()
 
@@ -428,7 +424,7 @@ class Game:
     def save_high_score(self, new_hs):
         print('saving high score: ', new_hs)
         try:
-            out_file = open(os.path.join("data", self.HS_FILENAME), 'wb')
+            out_file = open(os.path.join("data", "highscores.txt"), 'wb')
             pickle.dump(new_hs, out_file)
             out_file.close()
         except FileNotFoundError:

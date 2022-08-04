@@ -6,7 +6,6 @@ Need:
 
 
 -fix pathnames to resources, in robust way (smh)
-  -using FULL_PATH in MAIN.py to load / save to highscores file.
   -remove these damn try/catch statements. Failing to load images is FATAL dammit
 
 -ensure everything runs as intended
