@@ -3,12 +3,10 @@
 import control
 import stage
 import cutscenes
-
 import tkinter
 import time
-
-#import timeit
 import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
+#import timeit
 
 
 class Game:
@@ -18,27 +16,19 @@ class Game:
         self.ROOT = tkinter.Tk()
         self.ROOT.title('Space Explorer')
         
+        #constants
         self.WINDOW_WIDTH = 1200
         self.WINDOW_HEIGHT = 700
         self.FRAMERATE = 30
         self.BLOCKSIZE = 2000
         self.RESCUE_SCALE_FACTOR = 5 #cow spawns at rescue_iter * scale_factor + 2
-        self.PARENT = self.ROOT        #reference to wrapper. Don't need, really?
-        
-        
-        if False: #demo version???
-            self.RESCUE_SCALE_FACTOR = 1
-        
         
         #in-game variables
         self.clock = 0
         self.block_number = 0       #used in stage_updated() to determine spawning
-        
         self.rescue_iter = 1        
         self.hold_june = False
-        
         self.stop_movement = False  #checked in control.move(), used to stop motion on death
-        
         self.paused = False         #check in frame_loop()
         self.game_over = False      #check in frame_loop(), also in move()
         self.cutscene = None        #fed into cutscenes.play(). steal, rescue, return?
@@ -47,7 +37,6 @@ class Game:
         #bind keypress to callback func
         self.ROOT.bind_all('<KeyPress>', self.on_keypress)
         self.ROOT.bind_all('<KeyRelease>', self.on_keyrelease)
-
 
         #create display elements 
         self.create_HUD()        
@@ -62,7 +51,6 @@ class Game:
         self.scr.pack(side='top')
         
 
-        
         #create and spawn child objects
         self.control = control.Control(self, self.scr)
         self.stage = stage.Stage(self, self.scr)
@@ -78,10 +66,7 @@ class Game:
         
         #if use cProfile put True, otherwise this just runs mainloop normal.
         if True:
-            
-            cProfile.runctx('self.ROOT.mainloop()', #filename='statsfile.txt', 
-                            globals=globals(), locals=locals())
-                            
+            cProfile.runctx('self.ROOT.mainloop()', globals=globals(), locals=locals())          
         else: 
             self.ROOT.mainloop()
         
@@ -110,7 +95,6 @@ class Game:
         tkinter.Label(self.frame1, textvar=self.fuel_var, bg='black', fg='white', width=5, justify='left').pack(side='left')
         
       
- 
     def on_keypress(self, event):
         """Callback. Translates key to direction, updates xdir/ydir"""
         kp = event.char.lower()
@@ -160,7 +144,6 @@ class Game:
             self.death_loop()
             return
         
-
         if self.paused:
             self.scr.create_rectangle((self.control.position[0]-self.WINDOW_WIDTH, 
                                        0,
@@ -172,24 +155,19 @@ class Game:
             self.pause_loop()
             return
             
-        
         if self.cutscene:
             self.clock = 1
             self.cutscene_loop()
             return
       
-      
-        #catchall functions. Everything control or stage needs to do each
-        #frame, can be bundled in here.
+        #catchall functions, bundles everything control/stage need to update
         self.control.update()
         self.stage.update()
-        
         
         #update screen view according to control position.
         self.scr.xview_moveto((self.control.position[0] 
                                -(self.WINDOW_WIDTH / 2)) 
                                / self.WINDOW_WIDTH)
-        
         
         #update clock, update display values.
         self.clock = (self.clock + 1) % 100
@@ -197,14 +175,6 @@ class Game:
             self.speed_var.set(float(format(self.control.move_state['x_mntm'], '.2f')))
             self.dist_var.set(float(format(self.control.position[0], '.1f')))
             self.fuel_var.set(int(self.control.char_state['fuel'])*'|')    
-
-
-        #for debugging
-        if self.clock == 69:
-            if len(self.scr.find_all()) > 100:
-                self.paused = True
-                print("over 100 screne images")
-
 
         self.scr.after(self.FRAMERATE, self.frame_loop)
 
@@ -218,8 +188,6 @@ class Game:
             
 
     def death_loop(self):
-        """
-        """
         #slow down and bring to halt.
         if self.control.move_state['x_mntm'] > 1:
             self.control.move_state['x_mntm'] -= 0.5
@@ -227,14 +195,9 @@ class Game:
         elif self.control.move_state['x_mntm'] != 0:
             self.control.move_state['x_mntm'] = 0
         
-        
-        #High score stuff. Only do once.
+        # calc score and display message. Only do once
         if self.clock == 120:
-        
-            #calc score 
-            score = self.calc_high_score(self.dist_var.get(), self.rescue_iter)
-            
-            #post message
+            score = self.calc_score(self.dist_var.get(), self.rescue_iter)
             text = "Your score: " + str(format(score, '.2f'))
             self.scr.create_text((self.control.position[0], self.WINDOW_HEIGHT // 2),
                                                 fill='white', anchor='n', text=text, tag=('message'),
@@ -250,13 +213,11 @@ class Game:
         #clock is different, we're intentionally counting up to infinity 
         self.clock += 1
         
-        
         #check for restart, hit reset(), then restart frame_loop()
         if self.control.ydir == 'jump' and self.clock > 121:
             self.reset()
             self.frame_loop()
             return
-        
         
         #and we loop this whole function just like frame_loop
         self.scr.after(self.FRAMERATE, self.death_loop)
@@ -328,7 +289,7 @@ class Game:
         self.control.reset()
         
     
-    def calc_high_score(self, distance, r_iter):
+    def calc_score(self, distance, r_iter):
         """With current gameflow, its like suicides. Go back and forth, back and 
         forth. So total distance is however far you've traveled on prev iterations, 
         plus however far you've traveled on the current lap.

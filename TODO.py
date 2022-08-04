@@ -1,8 +1,8 @@
 # RESCUSCITATING FOR UBUNTU SYSTEM
 """
-PERFORMANCE:
--maybe certain calls take hella time in ubuntu. Run cprofile.
--maybe it's caused by the key issue, and the constant callback handling.
+UBU ISSUES:
+-in cProfile, it looks like ubu version of tkinter has 3x as many calls for a run. Try on
+windows and see what exact difference is.
 
 -Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
 
