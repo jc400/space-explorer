@@ -10,7 +10,7 @@ import time
 class Game:
     
     #-----------INIT & SETUP ----------------------#
-    def __init__(self): #, parent):
+    def __init__(self):
         
         self.ROOT = tkinter.Tk()
         self.ROOT.title('Space Explorer')
@@ -94,7 +94,7 @@ class Game:
         self.fuel_var.set('|||||')
         tkinter.Label(self.frame1, textvar=self.fuel_var, bg='black', fg='white', width=5, justify='left').pack(side='left')
         
-      
+
     def on_keypress(self, event):
         """Callback. Translates key to direction, updates xdir/ydir"""
         kp = event.char.lower()
@@ -112,7 +112,6 @@ class Game:
         if kp == 'p':
             self.paused = not self.paused
 
-
     def on_keyrelease(self, event):
         """Ensures direction continues until let go"""
         kr = event.char.lower()
@@ -120,9 +119,7 @@ class Game:
             self.control.xdir = None
         if kr == 'w' or kr == 's':
             self.control.ydir = None
-        
-
-
+       
 
     #----------------GAME ACTUALLY RUNNING---------#
 
