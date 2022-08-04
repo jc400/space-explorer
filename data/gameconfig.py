@@ -1,0 +1,11 @@
+#gameconfig
+
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 700
+
+FRAMERATE = 90
+
+BLOCKSIZE = 2000
+
+
+
