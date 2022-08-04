@@ -4,8 +4,6 @@ import control
 import stage
 import cutscenes
 
-import data.gameconfig as conf
-
 import tkinter
 import os
 import pickle
@@ -42,10 +40,10 @@ class Game:
     #-----------INIT & SETUP ----------------------#
     def __init__(self, parent):
         
-        self.WINDOW_WIDTH = conf.WINDOW_WIDTH
-        self.WINDOW_HEIGHT = conf.WINDOW_HEIGHT
-        self.FRAMERATE = conf.FRAMERATE
-        self.BLOCKSIZE = conf.BLOCKSIZE
+        self.WINDOW_WIDTH = 1200
+        self.WINDOW_HEIGHT = 700
+        self.FRAMERATE = 90
+        self.BLOCKSIZE = 2000
         
         self.RESCUE_SCALE_FACTOR = 5 #cow spawns at rescue_iter * scale_factor + 2
 
