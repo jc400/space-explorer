@@ -2,7 +2,6 @@
 
 import control
 import stage
-import asteroids
 import cutscenes
 
 import data.gameconfig as conf
