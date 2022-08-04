@@ -2,7 +2,7 @@
 
 from data.controlconfig import *    #importing movement constants. This is ugly I kno
 
-from PIL import Image, ImageTk
+import tkinter
 import os
 
  
@@ -49,32 +49,27 @@ class Control:
         self.position = (250, 300-self.char_size_y)
         
         self.print_scr()
-        
-
+    
     def load_images(self, pth='square'):
-        """Path is final folder that holds imgs. spaceman is main, also alyssa3, 
+        """Load images. pth allows different characters to be loaded."""
+        PATH = os.path.join('images', 'char', pth)
+        self.images = {'left':{}, 'right':{}}
         
-        """
-        PATH = os.path.join('images', 'char', pth,)
-          
-        self.images = {'still':{},
-                       'left':{},
-                       'right':{}}
-        try:
-            self.images['left']['standing'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'standleft.png')))
-            self.images['left']['stand_2'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'runleft.png')))
-            self.images['left']['jumping'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'standleft.png')))
-            self.images['left']['falling'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'fallleft.png')))
-            self.images['left']['jetpack'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'jetpackleft.png')))
-            
-            self.images['right']['standing'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'standright.png')))
-            self.images['right']['stand_2'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'runright.png')))
-            self.images['right']['jumping'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'standright.png')))
-            self.images['right']['falling'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'fallright.png')))
-            self.images['right']['jetpack'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'jetpackright.png'))) 
-        except IOError:
-            print('issue loading char images')
-            
+        def get_img(filename):
+            """Uses tkinter.photoImage to create & return an image"""
+            return tkinter.PhotoImage(file=os.path.join(PATH, filename))
+        
+        self.images['left']['standing'] = get_img('standleft.png')
+        self.images['left']['stand_2'] = get_img('runleft.png')
+        self.images['left']['jumping'] = get_img('standleft.png')
+        self.images['left']['falling'] = get_img('fallleft.png')
+        self.images['left']['jetpack'] = get_img('jetpackleft.png')
+        self.images['right']['standing'] = get_img('standright.png')
+        self.images['right']['stand_2'] = get_img('runright.png')
+        self.images['right']['jumping'] = get_img('standright.png')
+        self.images['right']['falling'] = get_img('fallright.png')
+        self.images['right']['jetpack'] = get_img('jetpackright.png')
+        
         try:
             size_file = open(os.path.join(PATH, 'size.txt'), 'r')
             self.char_size_x = int(size_file.readline())    #x dimension should be first line, y second
@@ -82,7 +77,6 @@ class Control:
             size_file.close()
         except IOError:
             print('couldnt load size of char')
-
 
 
 #---------------RESETTING-----------------#
