@@ -25,7 +25,6 @@ class Stage:
         
         self.DEBRIS_DRIFT = 0.2    #default drift speed 
         self.DEBRIS_DENSITY = 6
-        self.load_density()         #attempt to load density from file (in stage) 
        
         
         self.load_images()
@@ -60,17 +59,6 @@ class Stage:
         self.farm_images['field'] = get_img('field2.png')
         self.farm_images['fence'] = get_img('fence.png')
         self.farm_images['cow'] = get_img('june.png')
-
-    def load_density(self):
-        PATH = os.path.join('images', 'stage', 'space1')
-        try:
-            infile = open(os.path.join(PATH, 'density.txt'), 'r')
-            self.DEBRIS_DENSITY = int(infile.readline())
-            infile.close()
-        except IOError:
-            print("Unable to read density from config, falling back")
-
-
 
     #------------PRIMITIVES----------------#  
     
