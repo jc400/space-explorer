@@ -4,3 +4,4 @@ data/__pycache/
 data/highscores.txt
 *.pyc
 images/
+cProfile.txt
