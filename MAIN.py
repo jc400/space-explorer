@@ -8,7 +8,7 @@ import tkinter
 import time
 
 #import timeit
-#import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
+import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
 
 
 
@@ -24,10 +24,9 @@ class Wrapper:
         
         
         #if use cProfile put True, otherwise this just runs mainloop normal.
-        if False:
-            statsfile= r'C:\Users\User\Documents\Python Projects\Space Explorer\stats1'
+        if True:
             
-            cProfile.runctx('self.root.mainloop()', filename=statsfile, 
+            cProfile.runctx('self.root.mainloop()', #filename='statsfile.txt', 
                             globals=globals(), locals=locals())
                             
         else: 

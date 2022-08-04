@@ -1,13 +1,19 @@
 # RESCUSCITATING FOR UBUNTU SYSTEM
 """
+PERFORMANCE:
+-maybe certain calls take hella time in ubuntu. Run cprofile.
+-maybe it's caused by the key issue, and the constant callback handling.
+
+-Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
+
+
+
+
 -figure out what to do about seeker, PIL dependency 
   -could make non-rotating seeker
   -or do conditional seeker, if PIL detected
   -could create 8 images representing different directions, just have less fidelity
   -or just remove for simplicity
-  
--remove control charsize default in init--unnecessary
--remove density file reading from stage in init
   
 -simplify external files/paths
   -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,
@@ -15,9 +21,6 @@
   -could put all images in single dir. Then use os.walk to generate every filename in 
    that dir, and then use a loop to load all images. Single function to load everything.
    
--Figure out what's causing ubu performance lag. Cprofile? Try removing functionality?
--Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
-
 -simplify external py files and import structure? Dependency tree is a mess. Maybe graph 
  out and figure out what really needs what. 
  

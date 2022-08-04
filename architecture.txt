@@ -1,0 +1,70 @@
+RUNNING CODE 
+
+MAIN.py
+-create Wrapper() object, this creates tkinter root and the Game object
+
+-Game() object sets up game environment in __init__()
+    -sets constants, like BLOCK SIZE and screen dimensions
+    -initializes in-game data
+    -binds keypress callbacks
+    -creates the Canvas element, the HUD
+    -instantiates child objects (control, stage, cutscenes). This calls THEIR __init__()
+    -starts cutscene and frame_loop()
+    
+
+-Control() Object:
+    -initiates state: movement state, position, xdir(from controls)
+    -loads all the images. These are held in Control object, which is held under game
+    game.control.images['left']['standing']
+    -prints control char to screen 
+    
+-Stage() object
+    -sets stage constants, like density, etc.
+    -loads its own images 
+    -instantiates sub object: item_factory (which just loads its own images)
+    
+Wrapper
+|--Game
+    |--Control()
+    |--Stage()
+    |    |--item_factory
+    |
+    |--Cutcenes()
+    
+Note that each of these objects holds a reference to its parent, and also to the game
+screen (since they all need to access and write graphics).
+They also hold their own images, and have their own load_images() functions.
+And finally, each sub object has it's own method that needs to run every frameloop().
+
+
+
+ONCE INITIALIZED
+the game is run using main.frame_loop(). This runs in a tkinter.after() loop.
+
+First, frame_loop checks for any game conditions: gameover, pause, cutscene. If 
+any of those return true, regular frame_loop() exits into a specific loop for those cases.
+
+Then frame_loop updates its sub-objects (control and stage)
+control.update()
+    -move() -- pulls in xdir/ydir from key callback, calculates motion therefrom 
+    -update fuel regen 
+    
+stage.update()
+    -drifts every stage elements currently on stage
+    -calls item.update() to move item (huge if/elif chain for item types) 
+    -calls item.collision_logic() to check whether control collided anything. Also HUGE.
+    -finally checks pos vs block, to see whether we need to spawn the next block. 
+    
+Then frame_loop moves the viewport to match where control is 
+Then it checks the clock and updates the HUD elements
+Then it debugs by counting all items.
+
+And finally it calls itself again.
+
+
+
+WHO USES IMAGES AND HOW
+sub-classes (control, stage, cutscenes) load & hold their own images, because they 
+need to update the screen with them. 
+
+
