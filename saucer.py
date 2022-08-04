@@ -1,7 +1,7 @@
 #saucer
 
 import os
-from PIL import Image, ImageTk 
+import tkinter
 
 
 class Saucer:
@@ -29,7 +29,7 @@ class Saucer:
     def load_images(self):
         
         PATH = os.path.join('images', 'stage', 'alien', 'saucer.png')
-        self.img = ImageTk.PhotoImage(Image.open(PATH))
+        self.img = tkinter.PhotoImage(file=PATH)
         
        
     def spawn(self):
