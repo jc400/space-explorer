@@ -5,7 +5,6 @@ import stage
 import asteroids
 import cutscenes
 
-import data.filenames
 import data.gameconfig as conf
 
 import tkinter
@@ -39,15 +38,9 @@ class Wrapper:
         else: 
             self.root.mainloop()
             
-        
-          
-
 
 class Game:
-
-
     #-----------INIT & SETUP ----------------------#
-    
     def __init__(self, parent):
         
         self.WINDOW_WIDTH = conf.WINDOW_WIDTH
@@ -79,9 +72,7 @@ class Game:
         
         self.high_score = 0
         
-        
-        
-        
+
         #bind keypress to callback func
         self.PARENT.root.bind_all('<KeyPress>', self.on_keypress)
         self.PARENT.root.bind_all('<KeyRelease>', self.on_keyrelease)
@@ -90,13 +81,13 @@ class Game:
         #create display elements 
         self.create_HUD()        
         self.scr = tkinter.Canvas(self.PARENT.root,
-                                     width=self.WINDOW_WIDTH,
-                                     height=self.WINDOW_HEIGHT,
-                                     bg='black',
-                                     highlightbackground='black',
-                                     scrollregion=(0, 0, self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
-                                     confine=False,
-                                     )
+                                width=self.WINDOW_WIDTH,
+                                height=self.WINDOW_HEIGHT,
+                                bg='black',
+                                highlightbackground='black',
+                                scrollregion=(0, 0, self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
+                                confine=False,
+                                )
         self.scr.pack(side='top')
         
         
