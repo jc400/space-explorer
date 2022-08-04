@@ -418,24 +418,6 @@ class Stage:
         
         self.check_block(pos)
         
-        """
-        #check for new block, spawn_stairstep if necessary
-        if pos > (self.PARENT.block_number + 1) * self.BLOCKSIZE:
-            self.stairstep_w_zones(self.PARENT.block_number) 
-            self.PARENT.block_number += 1
-            
-            #respawn control sigh.
-            self.SCR.delete('control')
-            self.PARENT.control.print_scr()
-            
-        elif pos < (self.PARENT.block_number) * self.BLOCKSIZE:
-            self.spawn_back_stairstep(self.PARENT.block_number) 
-            self.PARENT.block_number -= 1
-            
-            #respawn control sigh.
-            self.SCR.delete('control')
-            self.PARENT.control.print_scr()
-        """ 
     
     
     def check_block(self, block_offset):
