@@ -34,6 +34,7 @@ class Game:
         
 
         #bind keypress to callback func
+        #ubuntu has weird key events, may need Settings --> Universal Access --> Repeat Keys --> Off
         self.ROOT.bind_all('<KeyPress>', self.on_keypress)
         self.ROOT.bind_all('<KeyRelease>', self.on_keyrelease)
 
@@ -57,7 +58,7 @@ class Game:
         self.reset()
         
         #start cutscene
-        #self.cutscene = 'steal'
+        self.cutscene = 'steal'
         
         #start frame loop.
         time.sleep(.5)
@@ -97,7 +98,6 @@ class Game:
 
     def on_keypress(self, event):
         """Callback. Translates key to direction, updates xdir/ydir"""
-        print('p', end='')
         kp = event.keysym.lower()
         direction_dict = {'a':'left',
                           'd':'right',
@@ -115,7 +115,6 @@ class Game:
 
     def on_keyrelease(self, event):
         """Ensures direction continues until let go"""
-        print('r', end='')
         kr = event.keysym.lower()
         if (kr == 'a' and self.control.xdir == 'left') or (kr == 'd' and self.control.xdir == 'right'):
             self.control.xdir = None
