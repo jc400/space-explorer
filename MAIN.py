@@ -11,38 +11,19 @@ import time
 import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
 
 
-
-#blank wrapper, just holds frame for game
-class Wrapper:
-
-    def __init__(self):
-    
-        self.root = tkinter.Tk()
-        self.root.title('Platformer')   
-        
-        self.game = Game(self)
-        
-        
-        #if use cProfile put True, otherwise this just runs mainloop normal.
-        if True:
-            
-            cProfile.runctx('self.root.mainloop()', #filename='statsfile.txt', 
-                            globals=globals(), locals=locals())
-                            
-        else: 
-            self.root.mainloop()
-            
-
 class Game:
     #-----------INIT & SETUP ----------------------#
-    def __init__(self, parent):
+    def __init__(self): #, parent):
+        
+        self.ROOT = tkinter.Tk()
+        self.ROOT.title('Space Explorer')
         
         self.WINDOW_WIDTH = 1200
         self.WINDOW_HEIGHT = 700
-        self.FRAMERATE = 90
+        self.FRAMERATE = 30
         self.BLOCKSIZE = 2000
         self.RESCUE_SCALE_FACTOR = 5 #cow spawns at rescue_iter * scale_factor + 2
-        self.PARENT = parent        #reference to wrapper. Don't need, really?
+        self.PARENT = self.ROOT        #reference to wrapper. Don't need, really?
         
         
         if False: #demo version???
@@ -64,13 +45,13 @@ class Game:
         
 
         #bind keypress to callback func
-        self.PARENT.root.bind_all('<KeyPress>', self.on_keypress)
-        self.PARENT.root.bind_all('<KeyRelease>', self.on_keyrelease)
+        self.ROOT.bind_all('<KeyPress>', self.on_keypress)
+        self.ROOT.bind_all('<KeyRelease>', self.on_keyrelease)
 
 
         #create display elements 
         self.create_HUD()        
-        self.scr = tkinter.Canvas(self.PARENT.root,
+        self.scr = tkinter.Canvas(self.ROOT,
                                   width=self.WINDOW_WIDTH,
                                   height=self.WINDOW_HEIGHT,
                                   bg='black',
@@ -84,7 +65,7 @@ class Game:
         
         #create and spawn child objects
         self.control = control.Control(self, self.scr)
-        self.stage = stage.Stage(self, self.scr) #asteroids.Asteroids(self, self.scr)
+        self.stage = stage.Stage(self, self.scr)
         self.cutscenes = cutscenes.Cutscenes(self, self.scr)
         self.reset()
         
@@ -95,10 +76,19 @@ class Game:
         time.sleep(.5)
         self.frame_loop()
         
+        #if use cProfile put True, otherwise this just runs mainloop normal.
+        if True:
+            
+            cProfile.runctx('self.ROOT.mainloop()', #filename='statsfile.txt', 
+                            globals=globals(), locals=locals())
+                            
+        else: 
+            self.ROOT.mainloop()
+        
         
     def create_HUD(self):
     
-        self.frame1 = tkinter.Frame(self.PARENT.root, bg='black')
+        self.frame1 = tkinter.Frame(self.ROOT, bg='black')
         self.frame1.pack(side='top', fill='x')
         
         #speed
@@ -408,4 +398,4 @@ class Game:
         print('done')
 
 
-test = Wrapper()
+test = Game()
