@@ -5,7 +5,6 @@ import stage
 import cutscenes
 
 import tkinter
-import os
 import time
 
 #import timeit
@@ -43,9 +42,7 @@ class Game:
         self.WINDOW_HEIGHT = 700
         self.FRAMERATE = 90
         self.BLOCKSIZE = 2000
-        
         self.RESCUE_SCALE_FACTOR = 5 #cow spawns at rescue_iter * scale_factor + 2
-
         self.PARENT = parent        #reference to wrapper. Don't need, really?
         
         
