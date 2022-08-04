@@ -24,8 +24,7 @@ But the after() call doesn't take args, no?
 """
 
 
-
-from PIL import Image, ImageTk
+import tkinter
 import os
 
 
@@ -45,19 +44,13 @@ class Cutscenes:
         
         
     def load_images(self):
-    
-        PATH = os.path.join('images', 'stage', 'alien')
+        PATH =  os.path.join('images', 'stage', 'alien')
+        self.images = {
+            'saucer':tkinter.PhotoImage(file=os.path.join(PATH, 'saucer.png')),
+            'tractor':tkinter.PhotoImage(file=os.path.join(PATH, 'tractor.png'))
+        }
         
-        self.images = {}
-        
-        try:
-            self.images['saucer'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'saucer.png')))
-            self.images['tractor'] = ImageTk.PhotoImage(Image.open(os.path.join(PATH,'tractor.png')))
-        
-        except IOError:
-            print("Unable to load alien images")
-            
-            
+   
     def play(self, cutscene, clock):
         
         if cutscene == 'steal':
