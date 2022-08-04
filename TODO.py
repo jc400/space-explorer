@@ -4,10 +4,6 @@ UBU ISSUES:
 -in cProfile, it looks like ubu version of tkinter has 3x as many calls for a run. Try on
 windows and see what exact difference is.
 
--Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
-
-
-
 
 -figure out what to do about seeker, PIL dependency 
   -could make non-rotating seeker
