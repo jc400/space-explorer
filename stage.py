@@ -32,7 +32,6 @@ class Stage:
         
         #items are part of stage. Attaching this here.
         self.item_factory = items.Item_factory(self.PARENT, self.SCR)
-        self.saucer = saucer.Saucer(self.PARENT, self.SCR)
         
         
     def load_images(self):
