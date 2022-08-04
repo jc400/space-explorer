@@ -3,12 +3,17 @@
 -figure out what to do about seeker, PIL dependency 
   -could make non-rotating seeker
   -or do conditional seeker, if PIL detected
+  -could create 8 images representing different directions, just have less fidelity
   -or just remove for simplicity
   
+-remove control charsize default in init--unnecessary
+-remove density file reading from stage in init
+  
 -simplify external files/paths
-  -can we simplify the highscore file? Is that even important?
   -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,
    and we just use a list of names in a loop.
+  -could put all images in single dir. Then use os.walk to generate every filename in 
+   that dir, and then use a loop to load all images. Single function to load everything.
    
 -Figure out what's causing ubu performance lag. Cprofile? Try removing functionality?
 -Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
