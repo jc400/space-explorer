@@ -2,7 +2,6 @@
 
 
 import items
-import saucer
 
 import tkinter
 import os
