@@ -97,7 +97,7 @@ class Game:
 
     def on_keypress(self, event):
         """Callback. Translates key to direction, updates xdir/ydir"""
-        print('k', end='')
+        print('p', end='')
         kp = event.keysym.lower()
         direction_dict = {'a':'left',
                           'd':'right',
@@ -115,6 +115,7 @@ class Game:
 
     def on_keyrelease(self, event):
         """Ensures direction continues until let go"""
+        print('r', end='')
         kr = event.keysym.lower()
         if (kr == 'a' and self.control.xdir == 'left') or (kr == 'd' and self.control.xdir == 'right'):
             self.control.xdir = None
