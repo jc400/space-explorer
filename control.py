@@ -79,13 +79,9 @@ class Control:
         self.images['right']['falling'] = get_img('fallright.png')
         self.images['right']['jetpack'] = get_img('jetpackright.png')
         
-        try:
-            size_file = open(os.path.join(PATH, 'size.txt'), 'r')
-            self.char_size_x = int(size_file.readline())    #x dimension should be first line, y second
-            self.char_size_y = int(size_file.readline())
-            size_file.close()
-        except IOError:
-            print('couldnt load size of char')
+        # get width/height of character
+        self.char_size_x = self.images['left']['standing'].width()
+        self.char_size_y = self.images['left']['standing'].height()
 
 
 #---------------RESETTING-----------------#
