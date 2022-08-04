@@ -72,13 +72,13 @@ class Game:
         #create display elements 
         self.create_HUD()        
         self.scr = tkinter.Canvas(self.PARENT.root,
-                                width=self.WINDOW_WIDTH,
-                                height=self.WINDOW_HEIGHT,
-                                bg='black',
-                                highlightbackground='black',
-                                scrollregion=(0, 0, self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
-                                confine=False,
-                                )
+                                  width=self.WINDOW_WIDTH,
+                                  height=self.WINDOW_HEIGHT,
+                                  bg='black',
+                                  highlightbackground='black',
+                                  scrollregion=(0, 0, self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
+                                  confine=False,
+                                 )
         self.scr.pack(side='top')
         
 
@@ -90,7 +90,7 @@ class Game:
         self.reset()
         
         #start cutscene
-        self.cutscene = 'steal'
+        #self.cutscene = 'steal'
         
         #start frame loop.
         time.sleep(.5)
