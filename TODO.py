@@ -1,21 +1,25 @@
 # RESCUSCITATING FOR UBUNTU SYSTEM
 """
-Need:
--download all requirements into venv (got pillow, may be others)
+-figure out what to do about seeker, PIL dependency 
+  -could make non-rotating seeker
+  -or do conditional seeker, if PIL detected
+  -or just remove for simplicity
+  
+-simplify external files/paths
+  -do we really need separate config files?
+  -do we really need image size file? Can't we detect the image size?
+  -can we simplify the highscore file? Is that even important?
+  -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,
+   and we just use a list of names in a loop.
+   
+-Figure out what's causing ubu performance lag. Cprofile? Try removing functionality?
+-Figure out the weird ubu key issues, eg not detecting hold/release properly. Workaround?
 
+-simplify external py files and import structure? Dependency tree is a mess. Maybe graph 
+ out and figure out what really needs what. 
+ 
+-literally just go through code and see what can be condensed.
 
-
--fix pathnames to resources, in robust way (smh)
-  -remove these damn try/catch statements. Failing to load images is FATAL dammit
-
--ensure everything runs as intended
-
-
-
-Want:
--clean up. Remove unneeded code, possibly restructure imports, maybe fix those godawful config 
-files. Make it presentable and SIMPLE.
--can I remove the pillow dependency? Im pretty sure I can use images directly from tkinter.
 
 """
 
