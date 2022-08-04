@@ -289,8 +289,6 @@ class Stage:
         #and the farm
         self.spawn_farm()
         
-        #self.saucer.spawn()
-        
         
            
     def clear_all(self, cur_block):
@@ -417,8 +415,6 @@ class Stage:
         
         self.item_factory.update_items(pos)
         self.item_factory.collision_logic()
-        
-        self.saucer.update(pos)
         
         self.check_block(pos)
         
