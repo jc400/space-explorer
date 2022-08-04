@@ -6,8 +6,6 @@
   -or just remove for simplicity
   
 -simplify external files/paths
-  -do we really need separate config files?
-  -do we really need image size file? Can't we detect the image size?
   -can we simplify the highscore file? Is that even important?
   -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,
    and we just use a list of names in a loop.

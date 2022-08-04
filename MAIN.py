@@ -9,8 +9,8 @@ import os
 import pickle
 import time
 
-import timeit
-import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
+#import timeit
+#import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
 
 
 
