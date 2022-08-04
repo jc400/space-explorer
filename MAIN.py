@@ -6,7 +6,6 @@ import cutscenes
 
 import tkinter
 import os
-import pickle
 import time
 
 #import timeit
@@ -67,8 +66,6 @@ class Game:
         self.game_over = False      #check in frame_loop(), also in move()
         self.cutscene = None        #fed into cutscenes.play(). steal, rescue, return?
         
-        self.high_score = 0
-        
 
         #bind keypress to callback func
         self.PARENT.root.bind_all('<KeyPress>', self.on_keypress)
@@ -87,10 +84,7 @@ class Game:
                                 )
         self.scr.pack(side='top')
         
-        
-        #high score variable, name location, load.
-        self.load_high_score()
-        
+
         
         #create and spawn child objects
         self.control = control.Control(self, self.scr)
@@ -129,25 +123,7 @@ class Game:
         self.fuel_var.set('|||||')
         tkinter.Label(self.frame1, textvar=self.fuel_var, bg='black', fg='white', width=5, justify='left').pack(side='left')
         
-        #high score
-        tkinter.Label(self.frame1, text='           High Score: ', bg='black', fg='white').pack(side='left')
-        self.high_score_label = tkinter.Label(self.frame1, text='0', bg='black', fg='white', width=5)
-        self.high_score_label.pack(side='left')
-
       
-    def load_high_score(self):
-        try:
-            in_file = open(os.path.join("data", "highscores.txt"), 'rb')
-            self.high_score = pickle.load(in_file)
-            in_file.close()
-
-        except FileNotFoundError:
-            print('couldnt open highscores.txt')
-            
-        #and update GUI
-        temp = format(self.high_score, '.1f')
-        self.high_score_label.config(text=temp)
-
  
     def on_keypress(self, event):
         """Callback. Translates key to direction, updates xdir/ydir"""
@@ -273,25 +249,10 @@ class Game:
             score = self.calc_high_score(self.dist_var.get(), self.rescue_iter)
             
             #post message
-            text = "Your score: " + str(format(score, '.2f')) + \
-                   "\nHighscore: " + str(format(self.high_score, '.2f'))
+            text = "Your score: " + str(format(score, '.2f'))
             self.scr.create_text((self.control.position[0], self.WINDOW_HEIGHT // 2),
                                                 fill='white', anchor='n', text=text, tag=('message'),
                                                 font=('arial, 20'))
-        
-            #check if high score.
-            if score > self.high_score:
-            
-                #set new high score
-                self.high_score = score
-                
-                #and update GUI
-                temp = format(self.high_score, '.1f')
-                self.high_score_label.config(text=temp)
-                
-                #and pickle to outfile
-                self.save_high_score(score)
-
 
         #this stuff happens each loop, just like on frame_loop()
         self.stage.update()
@@ -407,16 +368,6 @@ class Game:
             cur_dist = distance 
             
         return prev_dist + cur_dist
-    
-    
-    def save_high_score(self, new_hs):
-        print('saving high score: ', new_hs)
-        try:
-            out_file = open(os.path.join("data", "highscores.txt"), 'wb')
-            pickle.dump(new_hs, out_file)
-            out_file.close()
-        except FileNotFoundError:
-            print('couldnt open save file') 
  
 
 
