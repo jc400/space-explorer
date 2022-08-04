@@ -4,8 +4,7 @@
 import items
 import saucer
 
-
-from PIL import Image, ImageTk
+import tkinter
 import os
 import random
 
@@ -37,48 +36,31 @@ class Stage:
         
         
     def load_images(self):
-        """create a path to relevant directory, then load each image into a tk photo image in a dict.
+        """Stuff"""
+        def get_img(filename):
+            """Uses tkinter.photoImage to create & return an image"""
+            return tkinter.PhotoImage(file=os.path.join(PATH, filename))
         
-        Right now we're doing this naively. I'm sure we could create a loop, (maybe with a dict as input?)
-        to do all of this opening in less code. 
-        
-        The loop strucutre actually would be good, since it would allow individual processing on each image
-        (eg to shrink and darken for MG).
-        
-        -single background
-        -single ship
-        -lots of fgs
-        -dynamically create new MGs from FGs.
-        
-        
-        These are used in create_bg, fg, mg.
-        
-        """
-
-        PATH = os.path.join('images', 'stage', 'square')
-      
         self.stage_images = {}
-        self.mg_images = {}
-        
-        filenames = ['bg1.png', 'fg1.png', 'fg2.png', 'fg3.png', 'fg4.png', 'fg5.png']
-        
-        for i in filenames:
-            temp = Image.open(os.path.join(PATH, i))
-            
-            resized = temp.resize((round(temp.size[0]*.3), round(temp.size[1]*.3)))
-            
-            self.stage_images[i] = ImageTk.PhotoImage(temp)
-            self.mg_images[i] = ImageTk.PhotoImage(resized)
-            
-        
+        self.mg_images = {} 
         self.farm_images = {}
-        FARM_PATH = os.path.join('images', 'stage', 'farm')
-        self.farm_images['land'] = ImageTk.PhotoImage(Image.open(os.path.join(FARM_PATH, 'land2.png')))
-        self.farm_images['barn'] = ImageTk.PhotoImage(Image.open(os.path.join(FARM_PATH, 'barn.png')))
-        self.farm_images['field'] = ImageTk.PhotoImage(Image.open(os.path.join(FARM_PATH, 'field2.png')))
-        self.farm_images['fence'] = ImageTk.PhotoImage(Image.open(os.path.join(FARM_PATH, 'fence.png')))
-        self.farm_images['cow'] = ImageTk.PhotoImage(Image.open(os.path.join(FARM_PATH, 'june.png')))
-
+        
+        # load background and stage element images
+        PATH = os.path.join('images', 'stage', 'square')
+        for filename in ['bg1.png', 'fg1.png', 'fg2.png', 
+                         'fg3.png', 'fg4.png', 'fg5.png']:
+            temp = get_img(filename)
+            resized = temp.subsample(2,2)
+            self.stage_images[filename] = temp
+            self.mg_images[filename] = resized
+            
+        # load farm images
+        PATH = os.path.join('images', 'stage', 'farm')
+        self.farm_images['land'] = get_img('land2.png')
+        self.farm_images['barn'] = get_img('barn.png')
+        self.farm_images['field'] = get_img('field2.png')
+        self.farm_images['fence'] = get_img('fence.png')
+        self.farm_images['cow'] = get_img('june.png')
 
     def load_density(self):
         PATH = os.path.join('images', 'stage', 'space1')
