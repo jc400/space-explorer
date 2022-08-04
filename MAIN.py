@@ -5,11 +5,10 @@ import stage
 import cutscenes
 import tkinter
 import time
-import cProfile     #tottime is time in func, EXCLUDING sub. Cum INCLUDES sub.
-#import timeit
 
 
 class Game:
+    
     #-----------INIT & SETUP ----------------------#
     def __init__(self): #, parent):
         
@@ -64,8 +63,9 @@ class Game:
         time.sleep(.5)
         self.frame_loop()
         
-        #if use cProfile put True, otherwise this just runs mainloop normal.
-        if True:
+        # Switch for profiling
+        if False:
+            import cProfile
             cProfile.runctx('self.ROOT.mainloop()', globals=globals(), locals=locals())          
         else: 
             self.ROOT.mainloop()
@@ -298,8 +298,6 @@ class Game:
         
          cow offset in block     convert to px     iter     pasture triggered          actuatlly spawned 2 blocks ahead
         (1400 +                 (self.BLOCKSIZE * (i *      self.RESCUE_SCALE_FACTOR + 2)))
-        
-        
         """
         
         prev_dist = 0
@@ -316,47 +314,5 @@ class Game:
             
         return prev_dist + cur_dist
  
-
-
-    #-----------------PERFORMANCE STUFF---------------------#
-    
-    def timed_frame_loop(self):
-        """
-        To run this, need: self.scr.after(400, self.timed_frame_loop) to start
-        it in __init__(). Also need to comment out the recursive after line in 
-        real frameloop() since we're recursing in here instead.
-        
-        This isn't super helpful, just shows timing of each frame.
-        
-        When I ran, I'm getting anywhere from 0.001 to 0.005 (mostly 0.003) seconds
-        per frameloop (this excludes after() wait). For comparison, each frame also
-        includes a 0.03 second wait. So calc adds anywhere from 3% to 18% of time
-        on our decided framerate. 
-        """
-        t = timeit.timeit('self.frame_loop()', number=1, globals=locals())
-        print(t)
-        self.scr.after(self.FRAMERATE, self.timed_frame_loop)
-
-
-    def cprofile_frame_loop(self):
-        """
-        Issue with cProfile is that it can only handle a single function.
-        So I can feed it frame_loop(), and it'll get stats for that single call.
-        But frame_loop() isn't really a loop--its recursive, but it calls itself
-        ASYNCHRONOUSLY using after. So each new frameloop() call is a separate 
-        function. The previous loop calls it (using after) and then exits.
-        So cProfile is only collecting stats for that single frameloop() call.
-        
-        
-        
-        """
-        while False:
-            self.frame_loop()
-            time.sleep(0.03)
-            
-        self.frame_loop()
-        
-        print('done')
-
 
 test = Game()
