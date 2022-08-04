@@ -47,11 +47,6 @@ class Control:
         self.ydir = None
 
         
-        
-        #setting defaults, these should be overwritten by conf file in control image dir
-        self.char_size_x = 30
-        self.char_size_y = 45
-        
         #load own images
         self.load_images()
         
