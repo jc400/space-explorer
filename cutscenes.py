@@ -103,8 +103,10 @@ class Cutscenes:
             cow_x = self.SCR.coords(self.cow)[0]
             cow_y = self.SCR.coords(self.cow)[1]
             
-            self.SCR.coords(self.saucer, x_pos+8, y_pos)
-            self.SCR.coords(self.cow, cow_x+8, cow_y)
+            speed = clock - 330
+            
+            self.SCR.coords(self.saucer, x_pos+speed, y_pos)
+            self.SCR.coords(self.cow, cow_x+speed, cow_y)
         
             
         #----------CAPTIONS--------------#
