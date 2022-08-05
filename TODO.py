@@ -4,12 +4,6 @@
 
 -simplify pause/death/cutscene loop. Can we abstract away things that happen *every* loop? And build on that?
 Eg currently cutscene loop doesn't handle dying (until it ends). Maybe just fix that case.
-
--figure out what to do about seeker, PIL dependency 
-  -could make non-rotating seeker
-  -or do conditional seeker, if PIL detected
-  -could create 8 images representing different directions, just have less fidelity
-  -or just remove for simplicity
   
 -simplify external files/paths
   -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,

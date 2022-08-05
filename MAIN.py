@@ -55,6 +55,8 @@ class Game:
         self.control = control.Control(self, self.scr)
         self.stage = stage.Stage(self, self.scr)
         self.cutscenes = cutscenes.Cutscenes(self, self.scr)
+        
+        #reset() spawns all the stage adn items and initializes everything
         self.reset()
         
         #start cutscene
@@ -167,13 +169,14 @@ class Game:
                                -(self.WINDOW_WIDTH / 2)) 
                                / self.WINDOW_WIDTH)
         
-        #update clock, update display values.
+        #update clock, update HUD values.
         self.clock = (self.clock + 1) % 100
         if self.clock % 3 == 0:
             self.speed_var.set(float(format(self.control.move_state['x_mntm'], '.2f')))
             self.dist_var.set(float(format(self.control.position[0], '.1f')))
             self.fuel_var.set(int(self.control.char_state['fuel'])*'|')    
 
+        #loop back on self
         self.scr.after(self.FRAMERATE, self.frame_loop)
 
     
