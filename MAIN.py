@@ -222,41 +222,51 @@ class Game:
         
         #and we loop this whole function just like frame_loop
         self.scr.after(self.FRAMERATE, self.death_loop)
-    
+
     
     def cutscene_loop(self):
-                    
+        
         #I want to move the text with control, if player decides to scram
         if self.clock > 100:
             self.scr.coords(self.cutscenes.caption, (self.control.position[0], 45))
-                                  
+                
+        #Cutscene ends at 451                  
         if self.clock == 451:
             self.cutscene = False
             self.scr.delete('cutscene')
             self.frame_loop()
             return
         
-
-        #this stuff happens each loop, just like on frame_loop()
-        self.stage.update()
-        self.control.update()
-        self.scr.xview_moveto((self.control.position[0] 
-                           -(self.WINDOW_WIDTH / 2)) 
-                           / self.WINDOW_WIDTH)
-                           
         #call cutscenes 
         self.cutscenes.play(self.cutscene, self.clock)
         
-
+        # handle death
+        if self.game_over:
+            self.clock = 1
+            self.death_loop()
+            return
+        
+        #catchall functions, bundles everything control/stage need to update
+        self.control.update()
+        self.stage.update()
+        
+        #update screen view according to control position.
+        self.scr.xview_moveto((self.control.position[0] 
+                               -(self.WINDOW_WIDTH / 2)) 
+                               / self.WINDOW_WIDTH)
         
         #clock is different, we're intentionally counting up to infinity 
         self.clock += 1
+        
+        # still update HUD though
+        if self.clock % 3 == 0:
+            self.speed_var.set(float(format(self.control.move_state['x_mntm'], '.2f')))
+            self.dist_var.set(float(format(self.control.position[0], '.1f')))
+            self.fuel_var.set(int(self.control.char_state['fuel'])*'|')    
 
-        #and we loop this whole function just like frame_loop
+        #loop back on self
         self.scr.after(self.FRAMERATE, self.cutscene_loop)
-    
-    
-    
+
     #----------------GAMEOVER STUFF------------------#
     
     def reset(self):
