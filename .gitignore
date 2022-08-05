@@ -1,7 +1,4 @@
 __pycache__/
-data/__pycache/
 .venv
-data/highscores.txt
 *.pyc
-images/
-cProfile.txt
+p_images/
