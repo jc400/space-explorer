@@ -247,10 +247,10 @@ class Item_factory:
                 self.SCR.delete(item)
                 
                 #change image so we carry june
-                self.PARENT.control.load_images(pth='spaceman\carryjune')
+                newpath = os.path.join('spaceman', 'carryjune')
+                self.PARENT.control.load_images(pth=newpath)
                 self.PARENT.hold_june = True
-                
-                
+                            
             elif tag_tuple[1] == 'home':
                 
                 if self.PARENT.hold_june:
@@ -262,8 +262,7 @@ class Item_factory:
                     
                               
                     self.PARENT.cutscene = 'steal'
-
-               
+       
             else:
                 print('item name not recognized by collision_logic: ', tag_tuple[1])
 
