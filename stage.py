@@ -59,18 +59,7 @@ class Stage:
         self.farm_images['fence'] = get_img('fence.png')
         self.farm_images['cow'] = get_img('june.png')
 
-    #------------PRIMITIVES----------------#  
-    
-    def create_it(self, block_offset):
-        # killbox moved to create_bg()
-                                           
-        #mines
-        self.item_factory.spawn_mines(block_offset, 3)
-        
-        self.item_factory.spawn_landmines(block_offset, 3)
-        
-        self.item_factory.spawn_seeker(block_offset)
-            
+    #------------PRIMITIVES----------------#              
     
     def create_fg(self, block_offset):
         """Updating so that this only worries about spawning FG for given block. 
@@ -344,7 +333,6 @@ class Stage:
         self.create_bg((cur_block - 4) * self.BLOCKSIZE)
         self.create_mg((cur_block - 3) * self.BLOCKSIZE)
         self.create_fg((cur_block - 2) * self.BLOCKSIZE)
-        #self.create_it((cur_block - 2) * self.BLOCKSIZE)
         
         self.item_chooser(cur_block)
         
@@ -382,25 +370,6 @@ class Stage:
             m_density = cur_block // 8
             self.item_factory.spawn_mines(block_offset, m_density)
     
-        #seekers
-        if cur_block > 12:
-            chance = random.randint(1, 100)
-            if chance < cur_block:
-                self.item_factory.spawn_seeker('right')
-                
-                if chance < (cur_block / 2):
-                    self.item_factory.spawn_seeker('right')
-                    
-        #shooters
-        if cur_block > 16:
-            chance = random.randint(1, 150)
-            if chance < cur_block:
-                self.item_factory.spawn_shooter('left')
-                
-                if chance < (cur_block / 2):
-                    self.item_factory.spawn_shooter('left')
-
-                    
 
     
 #--------------DRIFT SCREEN UPDATING STUFF--------------#
