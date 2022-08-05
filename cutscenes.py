@@ -1,29 +1,5 @@
 #cutscenes with aliens!
 
-"""
-have three sequences: Steal, rescue, return
-
-When each is initialized, we need to set stop_movement to true, we need to create the
-black bars on top and bottom, and we need to start cutscene loop in main.
-
-There's also some gamestate updates to make--eg carrying June, rescue iteration, 
-reload images, and so forth.
-
-Maybe all of this can be handled in the collision_logic() if statement. Or maybe we 
-should create a meta function that handles all the updates separated out. It's really 
-simple logic, but there are a lot of necessary state changes.
-
-If we set the clock value before we call the cutscene loop, we can put a "if clock==1" 
-clause into the cutscene itself, and handle updates there. 
-
-Note that we also need cutscene_loop to call the correct cutscene. maybe we should
-pass it an argument? Which it passes to the cutscene function here? 
-But the after() call doesn't take args, no?
-
-
-"""
-
-
 import tkinter
 import os
 

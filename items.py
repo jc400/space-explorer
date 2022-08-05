@@ -1,20 +1,5 @@
 #items module
 
-"""
-current image tag structure:
--stage debris has first label of 'ground', 'mg', 'bg'. Next label is drift factor, used by drift()
-    -also note that control uses 'ground' tag to determine collisions, in move()
-    
--currently killboxes are 'killbox' tag. Handled in control.collision_logic() 
-
-New structure:
--all interactive images should have 'item' as first tag, so item_move() knows what to look for.
--next tag should be the specific item name. 
--then drift, if relevant. USE 12 FOR STATIONARY
--then the frame, used for animations. 
-
-"""
-
 import tkinter
 import os
 import random

@@ -8,7 +8,6 @@ import os
 import random
 
 
-
 class Stage:
 
     #----------SETUP-------------------#
@@ -21,7 +20,6 @@ class Stage:
         self.WINDOW_WIDTH = self.PARENT.WINDOW_WIDTH
         self.WINDOW_HEIGHT = self.PARENT.WINDOW_HEIGHT
         self.BLOCKSIZE = self.PARENT.BLOCKSIZE 
-        
         self.DEBRIS_DRIFT = 0.2    #default drift speed 
         self.DEBRIS_DENSITY = 6
        
