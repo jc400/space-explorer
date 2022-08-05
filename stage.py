@@ -120,7 +120,11 @@ class Stage:
         """Just making this a function to abstract, and to make consistent"""
         self.SCR.create_image(block_offset, 0, tags=('bg',), anchor='nw',
                           image=self.stage_images['bg1.png'],)
-                          
+        
+        if self.WINDOW_HEIGHT > 1000:
+            self.SCR.create_image(block_offset, 1000, tags=('bg',), anchor='nw',
+                          image=self.stage_images['bg1.png'],
+            )           
 
    
    
@@ -528,10 +532,11 @@ class Stage:
             elif tag_tuple[0] == 'bg':
                 
                 #pull out x coord for bg currently
-                bg_x = self.SCR.coords(debris)[0]  
+                bg_x = self.SCR.coords(debris)[0]
+                bg_y = self.SCR.coords(debris)[1]
 
                 #add in x shift and slide bg
-                self.SCR.coords(debris, bg_x + x_shift*0.6, 0)
+                self.SCR.coords(debris, bg_x + x_shift*0.6, bg_y)
                 
                 
     def calc_x_drift(self, drift_factor):
