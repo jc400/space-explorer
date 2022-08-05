@@ -70,7 +70,8 @@ class Cutscenes:
                 550, 344, image=self.PARENT.stage.farm_images['cow'], tags=('cutscene', 'june', 12),
                 anchor='nw'
             )
-
+            
+            #black bars
             self.SCR.create_rectangle(
                 -1000, 0, 9000, 100,fill='grey',tags=('cutscene', 'bars')
             )     
@@ -78,6 +79,9 @@ class Cutscenes:
                 -1000, self.PARENT.WINDOW_HEIGHT-100, 9000, self.PARENT.WINDOW_HEIGHT,
                 fill='grey',tags=('cutscene', 'bars')
             )
+            
+            # can we raise force field
+            self.SCR.lift('force-field')
                                                  
         #move saucer over cow and use tractor
         elif clock > 5 and clock < 300:

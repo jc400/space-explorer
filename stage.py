@@ -202,11 +202,6 @@ class Stage:
                               tags=('item', 'home', 12),
                               anchor='nw')
                               
-        #cow
-        if False: #self.PARENT.june_at_home:
-            self.SCR.create_image(550, 344, image=self.farm_images['cow'],
-                                  tags=('item', 'june', 12),
-                                  anchor='nw')
         
         #fence will go here
         self.SCR.create_image(240, 360, image=self.farm_images['fence'],
@@ -215,7 +210,7 @@ class Stage:
         
         #now field over everything
         self.SCR.create_image(140, 40, image=self.farm_images['field'],
-                              tags=('farm', 12),
+                              tags=('farm', 12, 'force-field'),
                               anchor='nw')
                               
     
