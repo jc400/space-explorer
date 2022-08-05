@@ -1,17 +1,17 @@
-# RESCUSCITATING FOR UBUNTU SYSTEM
+# ARCHITECTURAL PROJECTS (not gonna do)
 """
--see if I can fix the issue with june the cow being outside the forcefield in cutscene. Maybe use lift method?
-
--simplify pause/death/cutscene loop. Can we abstract away things that happen *every* loop? And build on that?
-Eg currently cutscene loop doesn't handle dying (until it ends). Maybe just fix that case.
-  
 -simplify external files/paths
   -Can we simplify image naming? Eg maybe the dict key is the SAME as image name,
    and we just use a list of names in a loop.
   -could put all images in single dir. Then use os.walk to generate every filename in 
    that dir, and then use a loop to load all images. Single function to load everything.
  
--literally just go through code and see what can be condensed (or removed :)
+-restructure item factory, make it actual child of main. Pull out item creation/deletion 
+functions, have those run in item.py's own .update() method. 
+  -this might involve pulling check_block() into main as well, which might be smart.
+  
+canvas.lift(item_tag) can raise items. This would obviate the need for itza() and all the
+weird workarounds. If we ever decide to expand, it might be worth refactoring all of that.
 
 """
 
