@@ -1,5 +1,9 @@
 # RESCUSCITATING FOR UBUNTU SYSTEM
 """
+-see if I can fix the issue with june the cow being outside the forcefield in cutscene. Maybe use lift method?
+
+-simplify pause/death/cutscene loop. Can we abstract away things that happen *every* loop? And build on that?
+Eg currently cutscene loop doesn't handle dying (until it ends). Maybe just fix that case.
 
 -figure out what to do about seeker, PIL dependency 
   -could make non-rotating seeker
@@ -12,12 +16,8 @@
    and we just use a list of names in a loop.
   -could put all images in single dir. Then use os.walk to generate every filename in 
    that dir, and then use a loop to load all images. Single function to load everything.
-   
--simplify external py files and import structure? Dependency tree is a mess. Maybe graph 
- out and figure out what really needs what. 
  
--literally just go through code and see what can be condensed.
-
+-literally just go through code and see what can be condensed (or removed :)
 
 """
 
