@@ -16,8 +16,8 @@ class Game:
         self.ROOT.title('Space Explorer')
         
         #constants
-        self.WINDOW_WIDTH = 1200
-        self.WINDOW_HEIGHT = 700
+        self.WINDOW_WIDTH = self.ROOT.winfo_screenwidth()           #1200 *2
+        self.WINDOW_HEIGHT = self.ROOT.winfo_screenheight() - 100   # 700 *2
         self.FRAMERATE = 30
         self.BLOCKSIZE = 2000
         self.RESCUE_SCALE_FACTOR = 5 #cow spawns at rescue_iter * scale_factor + 2
