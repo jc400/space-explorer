@@ -222,25 +222,12 @@ class Game:
     
     
     def cutscene_loop(self):
-
-        #gamestate updates go here too???
-        if self.clock == 1:
-        
-            #stop control from moving during cutscene
-            #self.stop_movement = True
-            
-            #create black bars on top/bottom
-            pos = self.control.position[0]
-            self.scr.create_rectangle(pos-1000, 0, pos+1000, 100,
-                                  fill='grey',
-                                  tags=('cutscene', 'bars'))
+                    
+        #I want to move the text with control, if player decides to scram
+        if self.clock > 100:
+            self.scr.coords(self.cutscenes.caption, (self.control.position[0], 45))
                                   
-            self.scr.create_rectangle(pos-1000, self.WINDOW_HEIGHT-100, pos+1000, self.WINDOW_HEIGHT,
-                                  fill='grey',
-                                  tags=('cutscene', 'bars'))
-                                  
-        
-        elif self.clock == 451:
+        if self.clock == 451:
             self.cutscene = False
             self.scr.delete('cutscene')
             self.frame_loop()
@@ -257,6 +244,7 @@ class Game:
         #call cutscenes 
         self.cutscenes.play(self.cutscene, self.clock)
         
+
         
         #clock is different, we're intentionally counting up to infinity 
         self.clock += 1
