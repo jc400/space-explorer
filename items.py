@@ -1,18 +1,6 @@
 #items module
 
 """
-Note RE seeker: current seeker implementation requires PIL library, because it is rotating the 
-seeker image (and we can't do that with just tkinter). I want to remove the PIL dependency for ease 
-of setup, so I will be removing the seeker from the regular game. But I'm leaving the seeker code
-here, and maybe we can check for PIL and use it optionally. Will decide later.
-
-Seeker needs: 
--images loaded here --> load_seeker_images() called when init() item factory
--seeker spawned --> stage.stairstep() -> stage.item_chooser() -> stage.spawn_items()
-                -> spawn_seeker()
--seeker update: -> item.move -> seeker.move()
-
-
 current image tag structure:
 -stage debris has first label of 'ground', 'mg', 'bg'. Next label is drift factor, used by drift()
     -also note that control uses 'ground' tag to determine collisions, in move()
@@ -32,8 +20,6 @@ import os
 import random
 import math
 
-#from PIL import Image, ImageTk  # Required to rotate seeker image
-SEEKER_ACTIVE = False
 
 
 class Item_factory:
@@ -57,7 +43,7 @@ class Item_factory:
             return tkinter.PhotoImage(file=os.path.join(PATH, filename))
             
         # define dict to hold item images
-        self.images = {'seeker':{}, 'landmine':{}}
+        self.images = {'landmine':{}}
         
         # load regular mine image
         PATH = os.path.join('images', 'item')
@@ -71,13 +57,6 @@ class Item_factory:
         self.images['landmine']['two'] = get_img('two.png')
         self.images['landmine']['one'] = get_img('one.png')
 
-    def load_seeker_images(self):
-        from PIL import Image, ImageTk
-        PATH = os.path.join('images', 'item')
-        self.images['seeker']['raw'] = Image.open(os.path.join(PATH, 'seeker', 'mini.png'))
-        self.images['seeker']['temp'] = ImageTk.PhotoImage(self.images['seeker']['raw'])
-        
-    
     
 #---------------INSIDE FRAMELOOP--------------# 
     
@@ -151,42 +130,7 @@ class Item_factory:
                     else:
                         self.explode(self.SCR.coords(item), self.MINESIZE * 2)
                         self.SCR.delete(item)
-                    
-                    
-            elif tag_tuple[1] == 'seeker':
-                self.seeker_move(item)
-                
-                sx = self.SCR.coords(item)[0]
-                sy = self.SCR.coords(item)[1]
-                
-                for col in self.SCR.find_overlapping(sx, sy, sx+10, sy+10):
-                    try:
-                        tag = self.SCR.gettags(col)[0]
-                        if tag == 'ground' or tag == 'control':
-                            self.explode((sx, sy), self.MINESIZE)
-                            self.SCR.delete(item)
-                            break
-                    except IndexError:
-                        print('couldnt retrieve tag for overlapping missile item. passing')
-                        print(self.SCR.gettags(col), col)
-                        
-            elif tag_tuple[1] == 'shooter':
-                self.shooter_move(item)
-                
-                sx = self.SCR.coords(item)[0]
-                sy = self.SCR.coords(item)[1]
-                
-                for col in self.SCR.find_overlapping(sx, sy, sx+10, sy+10):
-                    try:
-                        tag = self.SCR.gettags(col)[0]
-                        if tag == 'ground' or tag == 'control':
-                            self.explode((sx, sy), self.MINESIZE)
-                            self.SCR.delete(item)
-                            break
-                    except IndexError:
-                        print('couldnt retrieve tag for overlapping shooter item. passing')
-                        print(self.SCR.gettags(col), col)
-                
+                      
 
     def collision_logic(self):
         """Performs logic for anything control collides with.
@@ -237,10 +181,7 @@ class Item_factory:
                     self.SCR.itemconfig(item, tags=('item', 'landmine', 12, 47))
                 else:
                     pass
-                    
-            elif tag_tuple[1] == 'seeker': 
-                pass
-               
+                                
             elif tag_tuple[1] == 'june':
                 
                 #this ends one leg of rescue.
@@ -313,284 +254,6 @@ class Item_factory:
                                       
                 count -= 1
                 
-    
-    def spawn_seeker(self, side):
-        if not SEEKER_ACTIVE:
-            return
-        
-        seeker_y = random.randint(100, self.PARENT.WINDOW_HEIGHT-100)
-        if side == 'left':
-            seeker_x = self.PARENT.control.position[0] - 1000
-            angle = 0
-        else:
-            seeker_x = self.PARENT.control.position[0] + 1000
-            angle = 3.14
-        
-        self.SCR.create_image(seeker_x, seeker_y, 
-                              image=self.images['seeker']['temp'],
-                              tags=('item', 'seeker', 12, angle),  #drift 12, angle in radians.
-                              anchor='nw')
-    
-
-    def seeker_move(self, seeker):
-        
-        #------------GET INFO AND VARS--------------#
-        
-        #angle of direction (RADIANS) pulled from tag
-        s_angle = float(self.SCR.gettags(seeker)[3])
-        
-        #current x/y coords of seeker
-        sx = self.SCR.coords(seeker)[0]
-        sy = self.SCR.coords(seeker)[1]
-        
-        #currnet x/y of target (eg control)
-        tx = self.PARENT.control.position[0]
-        ty = self.PARENT.control.position[1]
-        
-        #missile constants
-        SPEED = 12
-        TURN_RADIUS = math.radians(3)
-        
-        #print('/nSTART INFO:')
-        #print('s_angle: ', s_angle, 'sx: ', sx, ' sy: ', sy)
-        #print('tx: ', tx, ' ty: ', ty)
-        
-        
-        #---------------CALCULATE IDEAL ANGLE TO TARGET---------#
-        """Note that atan2() assumes 0 degrees is right. So 90 is 
-        straight up, -90 is straight down. We want to convert this 
-        to 360 degrees of clock, where 0 degrees is straight up. 
-        
-        top r bot left
-        90  0 -90 180/-180 -- with atan2()
-        0  -90-180 90      -- adjusted by -90. negative side becomes right.
-        
-        270 180 90 0       -- add 180
-        90  0  270  180    -- add 360 mod 360. This is what we want. 
-        0  
-        """
-        
-        #calculate direct angle towards target
-        perfect_angle = math.atan2(ty-sy, tx-sx)
-        
-        #translate to use 360 degrees.
-        perfect_angle = (perfect_angle + math.radians(360)) % math.radians(360)
-
-        #calculate difference in angle
-        diff = math.degrees(s_angle - perfect_angle)
-        
-        #if seeker angle is close enough to perfect, slot it in
-        if abs(diff) < 10: 
-            s_angle = perfect_angle
-            decision = 'Close enough'
-            
-        #otherwise, turn s_angle on fastest route towards perfect angle
-        elif abs(diff) < 180:
-            if diff > 0:
-                s_angle = (s_angle - TURN_RADIUS) % math.radians(360)
-                decision= 'under 180, subtrct turn'
-            else:
-                s_angle = (s_angle + TURN_RADIUS) % math.radians(360)
-                decision= 'under 180, add turn'
-        #this means that we've looped around, so reverse logic applies
-        else:
-            if diff > 0:
-                s_angle = (s_angle + TURN_RADIUS) % math.radians(360)
-                decision= 'over 180, add turn'
-            else:
-                s_angle = (s_angle - TURN_RADIUS) % math.radians(360)
-                decision= 'over 180, subtract turn'
-            
-        #print("\n CALCULATE ANGLE")
-        #print("perfect angle: ", perfect_angle, " diff: ", diff, "decision: ", decision)
-        #print("New s_angle: ", s_angle)
-        
-        #----------------CALCULATE ACTUAL MOTION--------------#
-        
-        #slope, eg how much y needs to change for every 1 change of x
-        #divisor, to adjust x/y delta to a percentage.
-        slope = abs(math.tan(s_angle))
-        divisor = abs(slope) + 1
-        radian90 = 1.5707963267948966
-        
-        #here we ignroe the sign value of slope. Simply use quadrant to
-        #determine correct signs for x/y deltas.
-        if s_angle // radian90 == 0:
-            x_delta = 1 / divisor * SPEED
-            y_delta = slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 1:
-            x_delta = -1 / divisor * SPEED
-            y_delta = slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 2:
-            x_delta = -1 / divisor * SPEED
-            y_delta = -1 * slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 3:
-            x_delta = 1 / divisor * SPEED
-            y_delta = -1 * slope / divisor * SPEED
-        
-        else:
-            print('weird value for s_angle: ', s_angle)
-                   
-        #print('\nCalculate actual motion')
-        #print('slope: ', slope, ' x delta: ', x_delta, ' y delta: ', y_delta)
-        #print('quadrant: ', s_angle // radian90)
-        #print('\n\n')
-        
-        
-        #----------------ACTUALLY UPDATE MISSILE-------------#
-        #now actually update the missile coords
-        self.SCR.coords(seeker, sx+x_delta, sy+y_delta)
-        
-        #update image dict with rotated image of seeker
-        temp = self.images['seeker']['raw'].rotate(math.degrees(s_angle) * -1, expand=1)
-        self.images['seeker']['temp'] = ImageTk.PhotoImage(temp)
-        
-        #change image on screen with new angle tag and image.
-        self.SCR.itemconfig(seeker, tags=('item', 'seeker', 12, s_angle),
-                            image=self.images['seeker']['temp'])
-         
-
-    
-    def spawn_shooter(self, side):
-        seeker_y = random.randint(100, self.PARENT.WINDOW_HEIGHT-100)
-        if side == 'left':
-            seeker_x = self.PARENT.control.position[0] - 1000
-            angle = 0
-        else:
-            seeker_x = self.PARENT.control.position[0] + 1000
-            angle = 3.14
-        
-        self.SCR.create_image(seeker_x, seeker_y, 
-                              image=self.images['seeker']['temp'],
-                              tags=('item', 'shooter', 12, angle),  #drift 12, angle in radians.
-                              anchor='nw')
-    
-
-    def shooter_move(self, seeker):
-        
-        #------------GET INFO AND VARS--------------#
-        
-        #angle of direction (RADIANS) pulled from tag
-        s_angle = float(self.SCR.gettags(seeker)[3])
-        
-        #current x/y coords of seeker
-        sx = self.SCR.coords(seeker)[0]
-        sy = self.SCR.coords(seeker)[1]
-        
-        #currnet x/y of target (eg control)
-        tx = self.PARENT.control.position[0]
-        ty = self.PARENT.control.position[1]
-        
-        #missile constants
-        SPEED = 40
-        TURN_RADIUS = math.radians(0.5)
-        
-        #print('/nSTART INFO:')
-        #print('s_angle: ', s_angle, 'sx: ', sx, ' sy: ', sy)
-        #print('tx: ', tx, ' ty: ', ty)
-        
-        
-        #---------------CALCULATE IDEAL ANGLE TO TARGET---------#
-        """Note that atan2() assumes 0 degrees is right. So 90 is 
-        straight up, -90 is straight down. We want to convert this 
-        to 360 degrees of clock, where 0 degrees is straight up. 
-        
-        top r bot left
-        90  0 -90 180/-180 -- with atan2()
-        0  -90-180 90      -- adjusted by -90. negative side becomes right.
-        
-        270 180 90 0       -- add 180
-        90  0  270  180    -- add 360 mod 360. This is what we want. 
-        0  
-        """
-        
-        #calculate direct angle towards target
-        perfect_angle = math.atan2(ty-sy, tx-sx)
-        
-        #translate to use 360 degrees.
-        perfect_angle = (perfect_angle + math.radians(360)) % math.radians(360)
-
-        #calculate difference in angle
-        diff = math.degrees(s_angle - perfect_angle)
-        
-        #if seeker angle is close enough to perfect, slot it in
-        if abs(diff) < 10: 
-            s_angle = perfect_angle
-            decision = 'Close enough'
-            
-        #otherwise, turn s_angle on fastest route towards perfect angle
-        elif abs(diff) < 180:
-            if diff > 0:
-                s_angle = (s_angle - TURN_RADIUS) % math.radians(360)
-                decision= 'under 180, subtrct turn'
-            else:
-                s_angle = (s_angle + TURN_RADIUS) % math.radians(360)
-                decision= 'under 180, add turn'
-        #this means that we've looped around, so reverse logic applies
-        else:
-            if diff > 0:
-                s_angle = (s_angle + TURN_RADIUS) % math.radians(360)
-                decision= 'over 180, add turn'
-            else:
-                s_angle = (s_angle - TURN_RADIUS) % math.radians(360)
-                decision= 'over 180, subtract turn'
-            
-        #print("\n CALCULATE ANGLE")
-        #print("perfect angle: ", perfect_angle, " diff: ", diff, "decision: ", decision)
-        #print("New s_angle: ", s_angle)
-        
-        #----------------CALCULATE ACTUAL MOTION--------------#
-        
-        #slope, eg how much y needs to change for every 1 change of x
-        #divisor, to adjust x/y delta to a percentage.
-        slope = abs(math.tan(s_angle))
-        divisor = abs(slope) + 1
-        radian90 = 1.5707963267948966
-        
-        #here we ignroe the sign value of slope. Simply use quadrant to
-        #determine correct signs for x/y deltas.
-        if s_angle // radian90 == 0:
-            x_delta = 1 / divisor * SPEED
-            y_delta = slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 1:
-            x_delta = -1 / divisor * SPEED
-            y_delta = slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 2:
-            x_delta = -1 / divisor * SPEED
-            y_delta = -1 * slope / divisor * SPEED
-            
-        elif s_angle // radian90 == 3:
-            x_delta = 1 / divisor * SPEED
-            y_delta = -1 * slope / divisor * SPEED
-        
-        else:
-            print('weird value for s_angle: ', s_angle)
-                   
-        #print('\nCalculate actual motion')
-        #print('slope: ', slope, ' x delta: ', x_delta, ' y delta: ', y_delta)
-        #print('quadrant: ', s_angle // radian90)
-        #print('\n\n')
-        
-        
-        #----------------ACTUALLY UPDATE MISSILE-------------#
-        #now actually update the missile coords
-        self.SCR.coords(seeker, sx+x_delta, sy+y_delta)
-        
-        #update image dict with rotated image of seeker
-        temp = self.images['seeker']['raw'].rotate(math.degrees(s_angle) * -1, expand=1)
-        self.images['seeker']['temp'] = ImageTk.PhotoImage(temp)
-        
-        #change image on screen with new angle tag and image.
-        self.SCR.itemconfig(seeker, tags=('item', 'shooter', 12, s_angle),
-                            image=self.images['seeker']['temp'])
-         
-
-
 
     def explode(self, coord_tuple, size):
     
