@@ -5,6 +5,7 @@ import stage
 import cutscenes
 import tkinter
 import time
+import os
 
 
 class Game:
@@ -14,6 +15,8 @@ class Game:
         
         self.ROOT = tkinter.Tk()
         self.ROOT.title('Space Explorer')
+        icon = tkinter.PhotoImage(file='icon.png')
+        self.ROOT.tk.call('wm', 'iconphoto', self.ROOT._w, icon)
         
         #constants
         self.WINDOW_WIDTH = self.ROOT.winfo_screenwidth()           #1200 *2
