@@ -354,7 +354,6 @@ class Stage:
         if self.PARENT.RESCUE_SCALE_FACTOR == 1:
             self.item_factory.spawn_landmines(block_offset, 4)
             self.item_factory.spawn_mines(block_offset, 4)
-            self.item_factory.spawn_seeker('right')
             
             
         #landmines
